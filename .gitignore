@@ -1,3 +1,22 @@
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+.clang_format
+.travis.yml
+.ccls-cache/
+
+# IDE
+.vscode/
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Distribution
+dist/
+
 # Prerequisites
 *.d
 
