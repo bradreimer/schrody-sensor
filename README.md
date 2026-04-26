@@ -1,6 +1,6 @@
 # schrody-sensor
 
-Low-power sensor firmware for the **Seeed Studio XIAO ESP32-C6** microcontroller, built with PlatformIO and the Arduino framework.
+Low-power sensor firmware for **ESP32-C3** boards, built with PlatformIO and the Arduino framework.
 
 ---
 
@@ -8,11 +8,11 @@ Low-power sensor firmware for the **Seeed Studio XIAO ESP32-C6** microcontroller
 
 | Attribute     | Detail                                              |
 |---------------|-----------------------------------------------------|
-| SoC           | Espressif ESP32-C6 (32-bit RISC-V @ up to 160 MHz) |
+| SoC           | Espressif ESP32-C3 (32-bit RISC-V @ up to 160 MHz) |
 | Flash         | 4 MB                                                |
-| SRAM          | 512 KB                                              |
-| Wireless      | Wi-Fi 6 (802.11ax), BLE 5.0, Zigbee, Thread/Matter |
-| Form factor   | XIAO (21 × 17.5 mm), castellated pads, USB-C       |
+| SRAM          | 400 KB                                              |
+| Wireless      | Wi-Fi 4 (802.11 b/g/n), BLE 5.0                     |
+| Form factor   | Depends on board variant (DevKit, SuperMini, etc.) |
 
 ---
 
@@ -21,7 +21,7 @@ Low-power sensor firmware for the **Seeed Studio XIAO ESP32-C6** microcontroller
 ```plain
 schrody-sensor/
 ├── src/
-│   └── main.cpp          # Firmware source (blink example)
+│   └── main.cpp          # Firmware source (DHT22 monitor)
 ├── docs/
 │   ├── getting-started.md # Local setup and first build/flash workflow
 │   ├── design.md         # Design decisions and architecture
@@ -65,7 +65,7 @@ platformio run
    https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
    ```
 2. Install **esp32 by Espressif Systems** ≥ 3.0.0 via **Tools → Board → Boards Manager**.
-3. Select **Tools → Board → ESP32 Arduino → XIAO_ESP32C6**.
+3. Select **Tools → Board → ESP32 Arduino → ESP32C3 Dev Module**.
 4. Open `src/main.cpp`, compile, and upload.
 
 ---
@@ -74,8 +74,7 @@ platformio run
 
 | Resource                    | URL                                                                 |
 |-----------------------------|---------------------------------------------------------------------|
-| Seeed Getting Started wiki  | https://wiki.seeedstudio.com/xiao_esp32c6_getting_started/          |
-| ESP32-C6 datasheet          | https://www.espressif.com/sites/default/files/documentation/esp32-c6_datasheet_en.pdf |
-| XIAO ESP32-C6 schematic     | https://files.seeedstudio.com/wiki/SeeedStudio-XIAO-ESP32C6/XIAO_ESP32C6_SCH_v1.0_230912.pdf |
-| Official pinout spreadsheet | https://wiki.seeedstudio.com/xiao_esp32c6_getting_started/#hardware-overview |
-| PlatformIO board page       | https://registry.platformio.org/boards/seeed_xiao_esp32c6          |
+| ESP32-C3 datasheet          | https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf |
+| ESP32-C3 product page       | https://www.espressif.com/en/products/socs/esp32-c3                |
+| Arduino-ESP32 docs          | https://docs.espressif.com/projects/arduino-esp32/en/latest/       |
+| PlatformIO board page       | https://registry.platformio.org/boards/platformio/espressif32/esp32-c3-devkitm-1 |
