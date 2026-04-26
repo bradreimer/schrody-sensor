@@ -1,41 +1,48 @@
 /**
  * @file    main.cpp
- * @brief   Blink example for Seeed Studio XIAO ESP32-C6
+ * @brief   DHT22 monitor for Seeed Studio XIAO ESP32-C6
  *
- * Toggles the onboard orange user LED (GPIO15, active HIGH) at 1 Hz to
- * validate the end-to-end PlatformIO + Arduino toolchain.
- *
- * Hardware:
- *   Board : Seeed Studio XIAO ESP32-C6
- *   LED   : GPIO15 — onboard orange user LED, active HIGH
- *
- * Build & flash:
- *   pio run                       # compile
- *   pio run --target upload       # compile + flash
- *   pio device monitor            # open serial monitor (115200 baud)
- *
- * Bootloader mode (if auto-reset fails):
- *   Hold BOOT → plug USB-C → release BOOT → flash → press RESET
+ * Reads humidity and temperature from a DHT22 sensor on GPIO18 every
+ * 10 seconds and prints the values over serial in metric units.
  */
 
 #include <Arduino.h>
+#include <DHT.h>
 
-static constexpr uint8_t  USER_LED          = 15;  // onboard orange LED, active HIGH
-static constexpr uint32_t BLINK_INTERVAL_MS = 500; // 500 ms on, 500 ms off → 1 Hz
+static constexpr uint8_t DHT_PIN = 18;
+static constexpr uint8_t DHT_TYPE = DHT22;
+static constexpr uint32_t SAMPLE_INTERVAL_MS = 10000;
+
+DHT dht(DHT_PIN, DHT_TYPE);
+uint32_t lastSampleAtMs = 0;
 
 void setup() {
     Serial.begin(115200);
-    pinMode(USER_LED, OUTPUT);
-    digitalWrite(USER_LED, LOW);
-    Serial.println("XIAO ESP32-C6 Blink — ready");
+    dht.begin();
+
+    Serial.println("XIAO ESP32-C6 DHT22 monitor - ready");
+    Serial.println("Sampling every 10 seconds (Celsius, %RH)");
 }
 
 void loop() {
-    digitalWrite(USER_LED, HIGH);
-    Serial.println("LED ON");
-    delay(BLINK_INTERVAL_MS);
+    const uint32_t now = millis();
+    if (now - lastSampleAtMs < SAMPLE_INTERVAL_MS) {
+        return;
+    }
 
-    digitalWrite(USER_LED, LOW);
-    Serial.println("LED OFF");
-    delay(BLINK_INTERVAL_MS);
+    lastSampleAtMs = now;
+
+    const float humidity = dht.readHumidity();
+    const float temperatureC = dht.readTemperature(false);
+
+    if (isnan(humidity) || isnan(temperatureC)) {
+        Serial.println("DHT22 read failed");
+        return;
+    }
+
+    Serial.print("Temperature: ");
+    Serial.print(temperatureC, 1);
+    Serial.print(" C, Humidity: ");
+    Serial.print(humidity, 1);
+    Serial.println(" %");
 }
