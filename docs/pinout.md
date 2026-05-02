@@ -36,7 +36,7 @@ always confirm your board's vendor pinout diagram before wiring sensors.
 
 ## References
 
-| Resource           | URL                                                                 |
-|--------------------|---------------------------------------------------------------------|
+| Resource           | URL                                                                                   |
+|--------------------|---------------------------------------------------------------------------------------|
 | ESP32-C3 datasheet | https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf |
-| Arduino ESP32 docs | https://docs.espressif.com/projects/arduino-esp32/en/latest/       |
+| Arduino ESP32 docs | https://docs.espressif.com/projects/arduino-esp32/en/latest/                          |

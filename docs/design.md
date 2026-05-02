@@ -22,7 +22,7 @@
 ## 3. Firmware Behavior
 
 | Function       | Implementation                              |
-|----------------|----------------------------------------------|
+|----------------|---------------------------------------------|
 | Sensor type    | DHT22                                       |
 | Sensor pin     | GPIO18                                      |
 | Sample period  | 10 seconds                                  |
@@ -49,8 +49,8 @@ The project enables USB serial support through these `platformio.ini` flags:
 
 | Flag                           | Purpose                                              |
 |--------------------------------|------------------------------------------------------|
-| `-DARDUINO_USB_MODE=1`         | Enables USB mode used by Arduino-ESP32              |
-| `-DARDUINO_USB_CDC_ON_BOOT=1`  | Starts USB CDC on boot for `Serial` output          |
+| `-DARDUINO_USB_MODE=1`         | Enables USB mode used by Arduino-ESP32               |
+| `-DARDUINO_USB_CDC_ON_BOOT=1`  | Starts USB CDC on boot for `Serial` output           |
 
 ---
 
@@ -73,8 +73,8 @@ The project enables USB serial support through these `platformio.ini` flags:
 
 ## 8. References
 
-| Resource               | URL                                                                 |
-|------------------------|---------------------------------------------------------------------|
+| Resource               | URL                                                                                   |
+|------------------------|---------------------------------------------------------------------------------------|
 | ESP32-C3 datasheet     | https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf |
-| Arduino ESP32 docs     | https://docs.espressif.com/projects/arduino-esp32/en/latest/       |
-| PlatformIO espressif32 | https://registry.platformio.org/platforms/platformio/espressif32   |
+| Arduino ESP32 docs     | https://docs.espressif.com/projects/arduino-esp32/en/latest/                          |
+| PlatformIO espressif32 | https://registry.platformio.org/platforms/platformio/espressif32                      |
