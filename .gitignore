@@ -16,6 +16,9 @@ __pycache__/
 *.egg-info/
 .venv/
 
+# ESPHome build artifacts
+.esphome/
+
 # Local secrets
 secrets.yaml
 
