@@ -1,0 +1,51 @@
+esphome:
+  name: schrody-indoor-01
+  friendly_name: Schrody Indoor 01
+  comment: DHT22 temperature and humidity sensor on GPIO7 with Wi-Fi deep sleep.
+
+esp32:
+  board: seeed_xiao_esp32c3
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "UH+ZeKOugLobqQJjGRdv8ntjPEtJrNAqOofwTqE9JVU="
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Schrody-Indoor-01"
+    password: !secret ota_password
+
+captive_portal:
+    
+sensor:
+  - platform: dht
+    pin: GPIO7
+    model: DHT22
+    update_interval: 5min
+    temperature:
+      name: "Indoor Temperature"
+      device_class: temperature
+      state_class: measurement
+      unit_of_measurement: "°C"
+      accuracy_decimals: 1
+    humidity:
+      name: "Indoor Humidity"
+      device_class: humidity
+      state_class: measurement
+      unit_of_measurement: "%"
+      accuracy_decimals: 1
+  
