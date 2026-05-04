@@ -35,6 +35,8 @@ network:
 # 802.15.4 radio off between intervals instead of actively listening.
 # This is the primary battery-life mechanism for Thread-connected sensors.
 openthread:
+  # Paste the dataset TLV from Home Assistant (Settings -> System -> Thread).
+  tlv: !secret thread_dataset_tlv
   device_type: MTD
   poll_period: 5min
 
