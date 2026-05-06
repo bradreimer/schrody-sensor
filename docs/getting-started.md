@@ -1,6 +1,6 @@
 # Getting Started
 
-This project uses a local Python virtual environment and installs PlatformIO from `pyproject.toml`.
+This project uses a local Python virtual environment and installs ESPHome tooling from `pyproject.toml`.
 
 ## Prerequisites
 
@@ -30,22 +30,32 @@ python -m pip install --upgrade pip setuptools wheel
 python -m pip install .
 ```
 
-This installs PlatformIO at the pinned version defined in `pyproject.toml`.
+This installs the pinned tooling versions defined in `pyproject.toml`.
 
-## 4. Verify PlatformIO
+## 4. Verify ESPHome
 
 ```sh
-platformio --version
+esphome version
 ```
 
-## 5. Build and flash firmware
+## 5. Validate configuration
 
 ```sh
-platformio run
-platformio run --target upload
-platformio device monitor
+esphome config schrody-outdoor-01.yaml
+```
+
+## 6. Build and flash firmware
+
+```sh
+esphome run schrody-outdoor-01.yaml
+```
+
+For an indoor node, run:
+
+```sh
+esphome run schrody-indoor-01.yaml
 ```
 
 ## Bootloader mode (if upload fails)
 
-Hold the BOOT button, connect USB-C, release BOOT, upload again, then press RESET.
+Hold BOOT, connect USB-C, release BOOT, then retry `esphome run ...`.

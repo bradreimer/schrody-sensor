@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-`schrody-sensor` is embedded firmware targeting **ESP32-C3** boards with PlatformIO and Arduino. The current application reads a DHT22 sensor on GPIO18 and publishes temperature/humidity every 10 seconds over USB serial.
+`schrody-sensor` is an ESPHome-based firmware project targeting **ESP32-C6** hardware. The primary node configuration reads a DHT22 sensor on GPIO7 and publishes temperature/humidity over encrypted ESPHome API across Thread (OpenThread).
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Attribute     | Detail                                      |
 |---------------|---------------------------------------------|
-| SoC           | Espressif ESP32-C3 (RISC-V)                 |
+| SoC           | Espressif ESP32-C6 (RISC-V)                 |
 | CPU           | 32-bit RISC-V @ up to 160 MHz               |
 | Flash         | Commonly 4 MB on dev boards                 |
 | SRAM          | 400 KB                                      |
-| Wireless      | Wi-Fi 4 (802.11 b/g/n), BLE 5.0             |
+| Wireless      | Wi-Fi 6, BLE 5.0, IEEE 802.15.4             |
 | USB           | Native USB Serial/JTAG on supported boards  |
 
 ---
@@ -24,10 +24,10 @@
 | Function       | Implementation                              |
 |----------------|---------------------------------------------|
 | Sensor type    | DHT22                                       |
-| Sensor pin     | GPIO18                                      |
-| Sample period  | 10 seconds                                  |
+| Sensor pin     | GPIO7                                       |
+| Sample period  | 5 minutes (outdoor profile)                 |
 | Output         | Temperature in Celsius + humidity in %RH    |
-| Error handling | Prints `DHT22 read failed` on bad samples   |
+| Error handling | ESPHome component state/error reporting     |
 
 ---
 
@@ -35,39 +35,40 @@
 
 | Component      | Choice                           |
 |----------------|----------------------------------|
-| Framework      | Arduino                          |
-| Build system   | PlatformIO                       |
-| Target board   | `esp32-c3-devkitm-1`             |
-| Language       | C++17                            |
-| IDE            | VS Code + PlatformIO extension   |
+| Firmware stack | ESPHome                          |
+| Transport      | ESPHome API over IPv6            |
+| Mesh protocol  | OpenThread                       |
+| Target board   | `seeed_xiao_esp32c6`             |
+| IDE            | VS Code + ESPHome CLI            |
 
 ---
 
-## 5. Build Flags
+## 5. Networking and Power Strategy
 
-The project enables USB serial support through these `platformio.ini` flags:
+The outdoor profile uses OpenThread MTD mode with a long poll period to behave as a sleepy end device:
 
-| Flag                           | Purpose                                              |
-|--------------------------------|------------------------------------------------------|
-| `-DARDUINO_USB_MODE=1`         | Enables USB mode used by Arduino-ESP32               |
-| `-DARDUINO_USB_CDC_ON_BOOT=1`  | Starts USB CDC on boot for `Serial` output           |
+| Setting              | Value  | Purpose                                                  |
+|----------------------|--------|----------------------------------------------------------|
+| `device_type`        | `MTD`  | Reduced Thread device profile for battery operation      |
+| `poll_period`        | `5min` | Lets parent buffer traffic while radio sleeps            |
+| `network.enable_ipv6`| `true` | Required for native ESPHome API operation over Thread    |
 
 ---
 
 ## 6. Repository Conventions
 
-- One active PlatformIO environment per board target.
-- GPIO and timing constants use `static constexpr` names.
-- Runtime logs are emitted over `Serial` at 115200 baud.
+- One YAML file per physical node profile.
+- Secrets and credentials are provided through `secrets.yaml`.
+- Runtime logs are emitted by ESPHome logger over USB serial.
 
 ---
 
 ## 7. Future Work
 
-- [ ] Add non-blocking sensor scheduling with explicit startup warmup
-- [ ] Persist calibration/configuration in NVS
-- [ ] Add deep-sleep sampling mode for low-power operation
-- [ ] Add telemetry transport (MQTT/HTTP)
+- [ ] Add explicit safe-mode diagnostics for early boot crashes
+- [ ] Add battery voltage sensing and low-battery reporting
+- [ ] Evaluate deep-sleep wake cycles vs sleepy-end-device polling
+- [ ] Add OTA maintenance playbook for Thread devices
 
 ---
 
@@ -75,6 +76,6 @@ The project enables USB serial support through these `platformio.ini` flags:
 
 | Resource               | URL                                                                                   |
 |------------------------|---------------------------------------------------------------------------------------|
-| ESP32-C3 datasheet     | https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf |
-| Arduino ESP32 docs     | https://docs.espressif.com/projects/arduino-esp32/en/latest/                          |
-| PlatformIO espressif32 | https://registry.platformio.org/platforms/platformio/espressif32                      |
+| ESP32-C6 datasheet     | https://www.espressif.com/sites/default/files/documentation/esp32-c6_datasheet_en.pdf |
+| ESPHome docs           | https://esphome.io                                                                      |
+| OpenThread docs        | https://openthread.io                                                                   |

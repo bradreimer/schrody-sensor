@@ -4,17 +4,18 @@ Use the following prompt to recreate this project from scratch with an AI coding
 
 ---
 
-Initialize a new embedded firmware repository called `schrody-sensor` for an **ESP32-C3** board. The project should use **PlatformIO** as the build system and the **Arduino framework** via the `espressif32` platform package.
+Initialize a new embedded firmware repository called `schrody-sensor` for an **ESP32-C6** board using **ESPHome** with **OpenThread** support for low-power Thread sensor nodes.
 
 **Repository structure to create:**
 ```
 schrody-sensor/
-├── src/
-│   └── main.cpp
+├── schrody-indoor-01.yaml
+├── schrody-outdoor-01.yaml
+├── secrets.yaml
 ├── docs/
 │   ├── design.md
 │   └── pinout.md
-├── platformio.ini
+├── pyproject.toml
 ├── README.md
 ├── PROMPT.md
 └── .gitignore
@@ -24,50 +25,46 @@ schrody-sensor/
 
 ---
 
-**`platformio.ini`** — Target `esp32-c3-devkitm-1`, Arduino framework, `espressif32` platform, upload speed 921600, monitor speed 115200, and build flags `-DARDUINO_USB_MODE=1` and `-DARDUINO_USB_CDC_ON_BOOT=1`.
+**`schrody-outdoor-01.yaml`** — ESPHome configuration that:
+- Targets `seeed_xiao_esp32c6` with `framework: esp-idf`
+- Enables `logger`, encrypted `api`, and `ota`
+- Enables IPv6 networking
+- Configures OpenThread with `device_type: MTD` and long `poll_period` for sleepy end-device behavior
+- Reads DHT22 temperature/humidity from `GPIO7` every 5 minutes
 
 ---
 
-**`src/main.cpp`** — A DHT22 monitor that:
-- Uses `GPIO18` for DHT22 data as a `static constexpr uint8_t`
-- Samples every 10 seconds using a `static constexpr uint32_t` interval
-- In `setup()`: calls `Serial.begin(115200)`, initializes DHT, and prints a startup message
-- In `loop()`: reads humidity and Celsius temperature, prints values, and handles read failures
-- Includes comments documenting purpose and non-obvious logic
+**`schrody-indoor-01.yaml`** — Similar ESPHome configuration for indoor deployment, with board-specific naming and sensor entities.
 
 ---
 
 **`README.md`** — A thorough getting-started guide covering:
 - Project description and hardware summary table (SoC, flash, SRAM, wireless, form factor)
 - Repository structure tree
-- Prerequisites (PlatformIO CLI or VS Code extension)
-- Steps to clone, build (`pio run`), flash (`pio run --target upload`), and monitor serial (`pio device monitor`)
+- Prerequisites (Python + ESPHome CLI)
+- Steps to clone, validate config (`esphome config ...`), and flash (`esphome run ...`)
 - Bootloader mode instructions (hold BOOT, plug USB-C, release BOOT)
-- Arduino IDE alternative setup (Espressif board manager URL, board package ≥ 3.0.0, select `ESP32C3 Dev Module`)
-- A table of useful resource links: ESP32-C3 datasheet, Arduino ESP32 docs, and PlatformIO board page
+- A table of useful resource links: ESP32-C3/C6 datasheets, ESPHome docs, and OpenThread docs
 
 ---
 
-**`docs/pinout.md`** — ESP32-C3 pinout guidance that:
-- Documents the current DHT22 wiring on GPIO18
+**`docs/pinout.md`** — ESP32-C3 and ESP32-C6 pinout guidance that:
+- Documents the current DHT22 wiring on GPIO7
 - Notes board-to-board pin-label differences
-- Includes safe GPIO usage guidance for ESP32-C3 boards
+- Includes safe GPIO usage guidance for both C3 and C6 boards
 
 ---
 
 **`docs/design.md`** — A design document covering:
 - Project overview and DHT22 telemetry behavior
 - Target hardware table (SoC, CPU, flash, SRAM, wireless, form factor, USB)
-- Rationale for ESP32-C3 target and USB serial workflow
-- Toolchain table (Framework: Arduino; Build system: PlatformIO; Board package: espressif32 ≥ 3.0.0; Language: C++17; IDE: VS Code + PlatformIO)
-- Explanation of the two build flags and why they are required
-- Repository conventions (one env per board variant, named constants for magic numbers)
-- DHT22 design decisions in a table: sensor pin, sample interval, serial logging, and error handling
-- ASCII flow diagram of `setup()` and `loop()` for periodic sensing
-- Power modes table (active, modem-sleep, light-sleep, deep-sleep) with current values
-- Future work checklist (Wi-Fi provisioning, MQTT, Zigbee, Thread/Matter, deep sleep + timer wakeup, OTA, unit tests)
-- References section with links to ESP32-C3 datasheet, Arduino ESP32 docs, and PlatformIO docs
+- Rationale for ESP32-C6 Thread profile and ESP32-C3 Wi-Fi profile
+- Toolchain table (Firmware stack: ESPHome; transport: ESPHome API; mesh protocol: OpenThread)
+- Networking and power strategy for sleepy-end-device behavior
+- Repository conventions (one YAML per node profile, secrets in secrets.yaml)
+- Future work checklist (safe-mode diagnostics, battery telemetry, deep sleep vs SED tuning, OTA playbook)
+- References section with links to ESP32-C3/C6 datasheets, ESPHome docs, and OpenThread docs
 
 ---
 
-**`.gitignore`** — Ignore: `.pio/`, `.pioenvs/`, `.piolibdeps/`, `.clang_format`, `.travis.yml`, `.ccls-cache/`, `.vscode/`, `.DS_Store`, `build/`, `dist/`, `__pycache__/`, `*.pyc`.
+**`.gitignore`** — Ignore: `.esphome/`, `.vscode/`, `.DS_Store`, `build/`, `dist/`, `__pycache__/`, `*.pyc`, `.venv/`, `secrets.yaml`.
