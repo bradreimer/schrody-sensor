@@ -1,7 +1,7 @@
 esphome:
   name: schrody-outdoor-01
   friendly_name: Schrody Outdoor 01
-  comment: DHT22 outdoor node in temporary Wi-Fi mode until Thread border router is available.
+  comment: DHT22 outdoor node using OpenThread for ESPHome API transport.
 
 esp32:
   board: seeed_xiao_esp32c6
@@ -14,27 +14,13 @@ esp32:
   # Run at minimum supported frequency to reduce active-period current draw.
   cpu_frequency: 80MHz
 
-# Thread-disabled temporary networking mode.
 network:
   enable_ipv6: true
 
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-
-  ap:
-    ssid: "Schrody-Outdoor-01 Fallback"
-    password: !secret ota_password
-
-captive_portal:
-
-# OpenThread disabled until a valid Thread dataset TLV is provided in secrets.
-# Current invalid dataset values can cause esp_openthread_auto_start() to fail
-# and trigger a software-reset boot loop.
-# openthread:
-#   tlv: !secret thread_dataset_tlv
-#   device_type: MTD
-#   poll_period: 5min
+openthread:
+  tlv: !secret thread_dataset_tlv
+  device_type: MTD
+  poll_period: 5min
 
 api:
   encryption:
@@ -46,7 +32,7 @@ ota:
 
 sensor:
   - platform: dht
-    pin: GPIO7
+    pin: GPIO23
     model: DHT22
     update_interval: 5min
     temperature:
@@ -55,9 +41,9 @@ sensor:
       state_class: measurement
       unit_of_measurement: "°C"
       accuracy_decimals: 1
-    humidity:
-      name: Outdoor Humidity
-      device_class: humidity
-      state_class: measurement
-      unit_of_measurement: "%"
-      accuracy_decimals: 1
+    # humidity:
+    #   name: Outdoor Humidity
+    #   device_class: humidity
+    #   state_class: measurement
+    #   unit_of_measurement: "%"
+    #   accuracy_decimals: 1
